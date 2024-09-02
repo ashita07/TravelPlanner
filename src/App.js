@@ -2,21 +2,30 @@ import { useState } from "react";
 const Array = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ];
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: false },
-  { id: 3, description: "Bags", quantity: 3, packed: false },
-  { id: 4, description: "charger", quantity: 3, packed: true },
-  { id: 5, description: "sunscreen", quantity: 2, packed: true },
-  { id: 6, description: "Tshirts", quantity: 3, packed: false },
-];
+// const initialItems = [
+//   { id: 1, description: "Passports", quantity: 2, packed: false },
+//   { id: 2, description: "Socks", quantity: 12, packed: false },
+//   { id: 3, description: "Bags", quantity: 3, packed: false },
+//   { id: 4, description: "charger", quantity: 3, packed: true },
+//   { id: 5, description: "sunscreen", quantity: 2, packed: true },
+//   { id: 6, description: "Tshirts", quantity: 3, packed: false },
+// ];
 
 export default function App() {
+  const [items, setItems] = useState([]);
+  function handleItems(newItem) {
+    setItems((i) => [...i, newItem]);
+  }
+
+  function deleteItems(id) {
+    setItems((item) => item.filter((item) => item.id !== id));
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form handlenewfunc={handleItems} />
+      <PackingList itemsArray={items} onDelete={deleteItems} />
       <Stats />
     </div>
   );
@@ -26,9 +35,9 @@ function Logo() {
   return <h1>🌴 Far Away 🛒</h1>;
 }
 
-function Form() {
+function Form({ handlenewfunc }) {
   const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -36,10 +45,9 @@ function Form() {
     const newItem = { description, quantity, packed: false, id: Date.now() };
 
     if (!description) return;
-    console.log(newItem);
-
+    handlenewfunc(newItem);
     setDescription("");
-    setQuantity(0);
+    setQuantity(1);
   }
 
   return (
@@ -65,25 +73,28 @@ function Form() {
     </form>
   );
 }
-function PackingList() {
+function PackingList({ itemsArray, onDelete }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
-          <Item item={item} key={item.id} />
+        {itemsArray.map((item) => (
+          <Item item={item} key={item.id} onDelete={onDelete} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item }) {
+function Item({ item, onDelete }) {
   return (
     <li>
-      <span style={item.packed ? { textDecoration: "line-through" } : {}}>
+      <span
+        key={item.id}
+        style={item.packed ? { textDecoration: "line-through" } : {}}
+      >
         {item.quantity} {item.description}
       </span>
-      <button>❌</button>
+      <button onClick={() => onDelete(item.id)}>❌</button>
     </li>
   );
 }
