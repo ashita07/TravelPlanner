@@ -125,6 +125,13 @@ function Item({ item, onDelete, toHandleToggle }) {
   );
 }
 function Stats({ length, lengthPacked }) {
+  if (!length)
+    return (
+      <p className="stats">
+        <em>Start adding some items to your packing list</em>
+      </p>
+    );
+
   const percent = Math.round((lengthPacked / length) * 100);
   return (
     <footer className="stats">
