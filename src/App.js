@@ -13,6 +13,10 @@ const Array = [
 
 export default function App() {
   const [items, setItems] = useState([]);
+
+  const numItems = items.length;
+  const numPacked = items.filter((item) => item.packed).length;
+
   function handleItems(newItem) {
     setItems((i) => [...i, newItem]);
   }
@@ -38,7 +42,7 @@ export default function App() {
         onDelete={deleteItems}
         toHandleToggle={handleToggle}
       />
-      <Stats />
+      <Stats length={numItems} lengthPacked={numPacked} />
     </div>
   );
 }
@@ -120,10 +124,17 @@ function Item({ item, onDelete, toHandleToggle }) {
     </li>
   );
 }
-function Stats() {
+function Stats({ length, lengthPacked }) {
+  const percent = Math.round((lengthPacked / length) * 100);
   return (
     <footer className="stats">
-      <em>👜You have x items in your list , and you already packed X (X%)</em>
+      <em>
+        {" "}
+        {percent === 100
+          ? "you are done packing!! Ready to go✈️"
+          : ` 👜You have ${length} items in your list , and you already packed
+        ${lengthPacked} (${percent}%)`}
+      </em>
     </footer>
   );
 }
