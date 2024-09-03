@@ -41,6 +41,7 @@ export default function App() {
         itemsArray={items}
         onDelete={deleteItems}
         toHandleToggle={handleToggle}
+        setItems={setItems}
       />
       <Stats length={numItems} lengthPacked={numPacked} />
     </div>
@@ -89,8 +90,12 @@ function Form({ handlenewfunc }) {
     </form>
   );
 }
-function PackingList({ itemsArray, onDelete, toHandleToggle }) {
+function PackingList({ itemsArray, onDelete, toHandleToggle, setItems }) {
   const [sortBy, setSortBy] = useState("input");
+
+  function handleDelete() {
+    setItems([]);
+  }
 
   let sortedItems;
   if (sortBy === "input") sortedItems = itemsArray;
@@ -121,6 +126,7 @@ function PackingList({ itemsArray, onDelete, toHandleToggle }) {
           <option value="description">Sort by Description</option>
           <option value="packed">Sort by packed status</option>
         </select>
+        <button onClick={handleDelete}>Clear</button>
       </div>
     </div>
   );
