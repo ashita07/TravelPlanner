@@ -94,7 +94,8 @@ function PackingList({ itemsArray, onDelete, toHandleToggle, setItems }) {
   const [sortBy, setSortBy] = useState("input");
 
   function handleDelete() {
-    setItems([]);
+    let a = window.confirm("are you sure you wannna clear all items?");
+    if (a) setItems([]);
   }
 
   let sortedItems;
